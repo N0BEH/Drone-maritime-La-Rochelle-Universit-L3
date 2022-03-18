@@ -4,10 +4,6 @@ Dépôt pour le projet de Développement sur smartphone et objets connectés (ca
 
 - [Objectis](#objectifs)
 - [Equipes](#equipes)
-  - [CHEF DE PROJET](#chef-de-projet)
-  - [SCRUM MASTER](#scrum-master)
-  - [LEAD DEV](#lead-dev)
-  - [DEV](#dev)
 - [Outils](#outils)
 
 ## Objectifs
