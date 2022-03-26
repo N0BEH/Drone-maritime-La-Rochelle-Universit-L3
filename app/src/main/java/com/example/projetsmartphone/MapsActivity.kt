@@ -57,6 +57,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMarkers.add(it1)
             }
 
+
             var i = 0;
             var oldLat = 0.0
             var oldLong = 0.0
