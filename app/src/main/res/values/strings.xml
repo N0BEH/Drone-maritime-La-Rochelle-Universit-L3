@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ProjetSmartphone</string>
+    <string name="carte">Carte</string>
+    <string name="liste_itineraire">Liste itineraire</string>
+    <string name="choix_itineraire">Choix itineraire</string>
+    <string name="list_fragment">List Fragment</string>
+    <string name="map_fragment">Map Fragment</string>
+    <string name="custom_map_fragment">Custom Map Fragment</string>
 </resources>
