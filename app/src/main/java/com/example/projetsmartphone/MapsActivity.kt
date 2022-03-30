@@ -77,6 +77,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
 
+
              */
             //Environment.getExternalStorageState()
             Toast.makeText(this, Environment.getExternalStorageState().toString(), Toast.LENGTH_SHORT).show()
