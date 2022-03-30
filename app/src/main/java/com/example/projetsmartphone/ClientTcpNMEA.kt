@@ -2,19 +2,26 @@ package com.example.projetsmartphone
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.net.InetSocketAddress
 import java.net.Socket
 
-class ClientTcpNMEA {
-    private var adresse : String = "localhost"
-    private var port : Int = 3000
+class ClientTcpNMEA : Thread() {
+    override fun run() {
+        val client = Socket()
+        val socketAddress : InetSocketAddress = InetSocketAddress("10.13.8.197", 9000)
+        try{
+            client.connect(socketAddress)
 
-
-
-
-    public fun reqTcp(){
-        val client = Socket(adresse, port)
-        val input = BufferedReader(InputStreamReader(client.inputStream))
-        println("Client receiving [${input.readLine()}]")
-        client.close()
+            val buffer = BufferedReader(InputStreamReader(client.inputStream))
+            var txt = buffer.readLine()
+            while(txt != null) {
+                println("Le client recoit $txt")
+                txt = buffer.readLine()
+            }
+        }catch(e : Exception){
+            println("aaaaaa")
+            client.close()
+            println("Exception caught:$e")
+        }
     }
 }

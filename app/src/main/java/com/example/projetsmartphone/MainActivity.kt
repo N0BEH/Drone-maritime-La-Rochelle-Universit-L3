@@ -7,6 +7,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.util.concurrent.ConcurrentLinkedDeque
 
 
 open class MainActivity : AppCompatActivity() {
@@ -15,29 +16,8 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val thread = Thread {
-            try {
-                val client = Socket()
-                val socketAddress : InetSocketAddress = InetSocketAddress("10.13.8.197", 9000)
-                try{
-                    client.connect(socketAddress)
-
-                    val buffer = BufferedReader(InputStreamReader(client.inputStream))
-                    var txt = buffer.readLine()
-                    while(txt != null) {
-                        println("Le client recoit $txt")
-                        txt = buffer.readLine()
-                    }
-                }catch(e : Exception){
-                    println("aaaaaa")
-                    client.close()
-                    println("Exception caught:$e")
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-        thread.start()
+        val client : ClientTcpNMEA = ClientTcpNMEA()
+        client.start()
     }
 }
 
