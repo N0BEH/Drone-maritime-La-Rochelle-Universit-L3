@@ -8,6 +8,7 @@ import java.net.Socket
 class ClientTcpNMEA : Thread() {
     override fun run() {
         val client = Socket()
+
         //FAIRE ATTENTION A L'IP SA DEPEND DE LA MACHINE !!!
         val socketAddress : InetSocketAddress = InetSocketAddress("192.168.84.74", 9000)
         try{
