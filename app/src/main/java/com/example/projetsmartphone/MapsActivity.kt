@@ -2,7 +2,7 @@ package com.example.projetsmartphone
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -11,16 +11,20 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.projetsmartphone.databinding.ActivityMapsBinding
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.PolylineOptions
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+import java.io.File
+import android.widget.Toast
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private val mMarkers = arrayListOf<Marker>()
+    private val mMarkers = arrayListOf<Waypoint>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,54 +52,108 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         clicMarker()
     }
 
-    fun clicMap(){
+    private fun clicMap(){
 
-        mMap.setOnMapClickListener(OnMapClickListener { it ->
+        mMap.setOnMapClickListener { it ->
 
             val marker = LatLng(it.latitude, it.longitude)
-            mMap.addMarker(MarkerOptions().position(marker))?.let { it1 ->
-                mMarkers.add(it1)
+            mMap.addMarker(MarkerOptions().position(marker))
+
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("HHmmss.SSS")
+            val formatted = current.format(formatter)
+
+            val waypoint = Waypoint(it.latitude, it.longitude, formatted)
+
+            mMarkers.add(waypoint)
+
+            /*
+            var texte : String = ""
+            var ajout = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
+            val inputStream = resources.openRawResource(R.raw.test)
+            inputStream.bufferedReader().useLines {
+                texte = readLine().toString()
+                texte += ajout
             }
 
 
-            var i = 0;
+             */
+            //Environment.getExternalStorageState()
+            Toast.makeText(this, Environment.getExternalStorageState().toString(), Toast.LENGTH_SHORT).show()
+
+
+
+            File("test.txt").readText()
+            var texte : String = ""
+            var ajout = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
+
+            texte += ajout
+            File("test.txt").writeText(texte)
+
+            /*
+            Toast.makeText(this, MapsActivity::class.java.getResource("/res/raw/test").path, Toast.LENGTH_SHORT).show()
+
+            File(MapsActivity::class.java.getResource("/res/raw/test").path).bufferedWriter().use { out ->
+                out.write(texte)
+            }
+
+
+             */
+
+
+
+
+
+            var i = 0
             var oldLat = 0.0
             var oldLong = 0.0
-            var newLat = 0.0
-            var newLong = 0.0
-            if (mMarkers.size > 1){
+            var newLat: Double
+            var newLong: Double
+            if (mMarkers.size > 1) {
 
-                    mMarkers.forEach {
+                mMarkers.forEach {
 
-                        newLat = it.position.latitude
-                        newLong =it.position.longitude
+                    newLat = it.latitude
+                    newLong = it.longitude
 
-                        if( i >= 1) {
-                            mMap.addPolyline(
-                                PolylineOptions()
-                                    .add(
-                                        LatLng(oldLat, oldLong),
-                                        LatLng(newLat, newLong)
-                                    )
-                            )
-                        }
-
-                        oldLat = newLat
-                        oldLong = newLong
-
-                        i += 1
-
+                    if (i >= 1) {
+                        mMap.addPolyline(
+                            PolylineOptions()
+                                .add(
+                                    LatLng(oldLat, oldLong),
+                                    LatLng(newLat, newLong)
+                                )
+                        )
                     }
+
+                    oldLat = newLat
+                    oldLong = newLong
+
+                    i += 1
+
                 }
-        })
+            }
+        }
     }
 
 
-    fun clicMarker(){
+    private fun clicMarker(){
 
-        mMap.setOnMarkerClickListener { marker ->
+        mMap.setOnMarkerClickListener {
             mMap.clear()
             mMarkers.clear()
+
+            /*
+            val fichier = File("./src/main/res/raw/test.txt")
+            try {
+                fichier.writeText("cocou")
+
+            } catch (e: Exception){
+                Toast.makeText(this, "err", Toast.LENGTH_SHORT).show()
+            }
+
+             */
+
             true
         }
 
