@@ -8,16 +8,20 @@ import java.net.Socket
 class ClientTcpNMEA : Thread() {
     override fun run() {
         val client = Socket()
-        val socketAddress : InetSocketAddress = InetSocketAddress("10.13.8.197", 9000)
+
+        //FAIRE ATTENTION A L'IP SA DEPEND DE LA MACHINE !!!
+        val socketAddress : InetSocketAddress = InetSocketAddress("192.168.84.74", 9000)
         try{
             client.connect(socketAddress)
 
             val buffer = BufferedReader(InputStreamReader(client.inputStream))
-            var txt = buffer.readLine()
-            while(txt != null) {
-                println("Le client recoit $txt")
-                txt = buffer.readLine()
-            }
+
+            val nmea = NMEAConverter()
+            //Creation d'un nouveau waypoint.
+            val wp = nmea.trameToWaypoint(buffer)
+
+            //Gerer l'affichage du point sur la map pour visualiser le déplacement du bateau.
+
         }catch(e : Exception){
             println("aaaaaa")
             client.close()
