@@ -96,9 +96,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE)
                         fileOutputStream.write("$text\n$textToWrite".toByteArray())
 
-
-                        Log.d("TAG", "dir: $filesDir.")
-
                         fileOutputStream.close()
                         fileInputStream.close()
 
