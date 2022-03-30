@@ -23,7 +23,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.lang.Exception
 
-
 //token : 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
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
