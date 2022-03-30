@@ -105,9 +105,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
 
                 }
-
-
-
             }
 
 
