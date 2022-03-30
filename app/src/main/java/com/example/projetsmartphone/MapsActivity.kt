@@ -1,8 +1,10 @@
 package com.example.projetsmartphone
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -17,8 +19,12 @@ import java.time.format.DateTimeFormatter
 
 import java.io.File
 import android.widget.Toast
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.lang.Exception
 
 
+//token : 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
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -67,42 +73,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             mMarkers.add(waypoint)
 
-            /*
-            var texte : String = ""
-            var ajout = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
-            val inputStream = resources.openRawResource(R.raw.test)
-            inputStream.bufferedReader().useLines {
-                texte = readLine().toString()
-                texte += ajout
+            val state = Environment.getExternalStorageState()
+            if (state == Environment.MEDIA_MOUNTED) {
+                // Available to read and write
+
+                val fileName = "test.txt"
+                val textToWrite = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
+                val fileOutputStream: FileOutputStream
+                val fileInputStream: FileInputStream
+                var text = ""
+
+                if (isExternalStorageWritable() && isExternalStorageReadable()) {
+
+                    try {
+                        fileInputStream = openFileInput(fileName)
+                        fileInputStream.use {
+                            text =  it.bufferedReader().use {
+                                it.readText()
+                            }
+                            Log.d("TAG", "LOADED: $text")
+                        }
+
+                        fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE)
+                        fileOutputStream.write("$text\n$textToWrite".toByteArray())
+
+
+                        Log.d("TAG", "dir: $filesDir.")
+
+                        fileOutputStream.close()
+                        fileInputStream.close()
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+
+
+
             }
-
-
-
-             */
-            //Environment.getExternalStorageState()
-            Toast.makeText(this, Environment.getExternalStorageState().toString(), Toast.LENGTH_SHORT).show()
-
-
-
-            File("test.txt").readText()
-            var texte : String = ""
-            var ajout = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
-
-            texte += ajout
-            File("test.txt").writeText(texte)
-
-            /*
-            Toast.makeText(this, MapsActivity::class.java.getResource("/res/raw/test").path, Toast.LENGTH_SHORT).show()
-
-            File(MapsActivity::class.java.getResource("/res/raw/test").path).bufferedWriter().use { out ->
-                out.write(texte)
-            }
-
-
-             */
-
-
-
 
 
             var i = 0
@@ -144,19 +154,47 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.clear()
             mMarkers.clear()
 
-            /*
-            val fichier = File("./src/main/res/raw/test.txt")
-            try {
-                fichier.writeText("cocou")
+            val state = Environment.getExternalStorageState()
+            if (state == Environment.MEDIA_MOUNTED) {
+                // Available to read and write
 
-            } catch (e: Exception){
-                Toast.makeText(this, "err", Toast.LENGTH_SHORT).show()
+                val fileName = "test.txt"
+                val fileOutputStream: FileOutputStream
+                var text = ""
+
+                if (isExternalStorageWritable() && isExternalStorageReadable()) {
+
+                    try {
+
+                        fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE)
+                        fileOutputStream.write("".toByteArray())
+
+                        Log.d("TAG", "dir: $filesDir.")
+
+                        fileOutputStream.close()
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+
+
+
             }
-
-             */
 
             true
         }
 
+    }
+
+    fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    fun isExternalStorageReadable(): Boolean {
+        return Environment.getExternalStorageState() in
+                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
     }
 }
