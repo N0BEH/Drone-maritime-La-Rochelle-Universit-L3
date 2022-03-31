@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,9 +16,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -26,6 +28,7 @@ class CustomMapFragment : Fragment(){
     private lateinit var mMap: GoogleMap
     private val mMarkers = arrayListOf<Waypoint>()
     private var mapReady = false
+    private var nbrFichier = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,8 +37,23 @@ class CustomMapFragment : Fragment(){
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_custom_map, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+
+
+        val bouttonSave = view.findViewById<Button>(R.id.buttonSave) as Button
+
+        bouttonSave.setOnClickListener {
+            if ( mMarkers.size > 0) {
+                clicBtnSave()
+                mMap.clear()
+                mMarkers.clear()
+            }
+        }
+
         mapFragment.getMapAsync {
             googleMap -> mMap = googleMap
+            mMap.clear()
+            mMarkers.clear()
+
             mapReady = true
 
             val minime = LatLng(46.14547556383779, -1.1685415729880333)
@@ -47,6 +65,56 @@ class CustomMapFragment : Fragment(){
         }
         return view
     }
+
+    private fun clicBtnSave(){
+
+        val state = Environment.getExternalStorageState()
+
+        if (state == Environment.MEDIA_MOUNTED) {
+
+            val fileName = "$nbrFichier.txt"
+            var text = ""
+            nbrFichier += 1
+
+            if (isExternalStorageWritable() && isExternalStorageReadable()) {
+
+                mMarkers.forEach{
+                    text += "${it.latitude},${it.longitude},${it.heure}\n"
+                }
+
+                var fileOutputStream: FileOutputStream
+
+                try {
+                    fileOutputStream = requireActivity().openFileOutput(fileName, Context.MODE_PRIVATE)
+                    fileOutputStream.write("$text".toByteArray())
+
+                    fileOutputStream.close()
+
+
+                    var fileInputStream: FileInputStream = requireActivity().openFileInput(fileName)
+
+                    var myExternalFile = File(fileName).path
+
+
+                    fileInputStream.use {
+                        text =  it.bufferedReader().use {
+                            it.readText()
+                        }
+
+                        Log.d("TAG", "LOADED: $text")
+                        Log.d("TAG", "dir: $myExternalFile")
+                    }
+                    fileInputStream.close()
+
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+    }
+
 
     private fun clicMap(){
 
@@ -62,44 +130,6 @@ class CustomMapFragment : Fragment(){
             val waypoint = Waypoint(it.latitude, it.longitude, formatted)
 
             mMarkers.add(waypoint)
-
-            val state = Environment.getExternalStorageState()
-            if (state == Environment.MEDIA_MOUNTED) {
-                // Available to read and write
-
-                val fileName = "test.txt"
-                val textToWrite = "${it.latitude},${it.longitude},${formatted}"
-                val fileOutputStream: FileOutputStream
-                val fileInputStream: FileInputStream
-                var text = ""
-
-
-                if (isExternalStorageWritable() && isExternalStorageReadable()) {
-
-                    try {
-
-                        fileInputStream = requireActivity().openFileInput(fileName)
-                        fileInputStream.use {
-                            text =  it.bufferedReader().use {
-                                it.readText()
-                            }
-                            Log.d("TAG", "LOADED: $text")
-                        }
-
-                        fileOutputStream = requireActivity().openFileOutput(fileName, Context.MODE_PRIVATE)
-                        fileOutputStream.write("$text\n$textToWrite".toByteArray())
-
-                        fileOutputStream.close()
-                        fileInputStream.close()
-
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                }
-            }
-
 
             var i = 0
             var oldLat = 0.0
@@ -138,31 +168,6 @@ class CustomMapFragment : Fragment(){
         mMap.setOnMarkerClickListener {
             mMap.clear()
             mMarkers.clear()
-
-            val state = Environment.getExternalStorageState()
-            if (state == Environment.MEDIA_MOUNTED) {
-                // Available to read and write
-
-                val fileName = "test.txt"
-                val fileOutputStream: FileOutputStream
-
-                if (isExternalStorageWritable() && isExternalStorageReadable()) {
-
-                    try {
-
-                        fileOutputStream = requireActivity().openFileOutput(fileName, Context.MODE_PRIVATE)
-                        fileOutputStream.write("".toByteArray())
-
-                        fileOutputStream.close()
-
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-                }
-
-            }
 
             true
         }
