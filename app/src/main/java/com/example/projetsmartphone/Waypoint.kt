@@ -1,22 +1,15 @@
 package com.example.projetsmartphone
 
-/* RASSEL Valentin */
 //Classe qui aura pour but d'être instancié pour enregistrement une coordonnée.
 
-class Waypoint(lat : Double, long : Double, h : String)
+class Waypoint(lat: Double = 0.0, long: Double = 0.0, h: String = "", vn: Double = 0.0, vk: Double = 0.0)
 {
-    val latitude: Double = lat
-    val longitude: Double = long
+    var latitude: Double = lat
+    var longitude: Double = long
 
-    val heure: String = h
+    var vitesseNoeud: Double = vn
+    var vitesseKmh: Double = vk
 
-    /*
-    pour test
-    val wp = Waypoint("4618.070", "00109.482", "N", "W", "155816.881")
-
-        println("---")
-        println("${wp.heure}")
-        println("---")
-     */
+    var heure: String = h
 
 }
