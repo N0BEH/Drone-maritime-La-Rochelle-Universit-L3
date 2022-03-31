@@ -37,5 +37,11 @@ open class MainActivity : AppCompatActivity() {
             commit()
         }
     }
+
+    internal fun onOpenMap(){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, CustomMapFragment())
+            .commitNow()
+    }
 }
 
