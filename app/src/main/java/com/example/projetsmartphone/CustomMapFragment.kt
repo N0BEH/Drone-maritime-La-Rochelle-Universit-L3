@@ -145,7 +145,6 @@ class CustomMapFragment : Fragment(){
 
                 val fileName = "test.txt"
                 val fileOutputStream: FileOutputStream
-                var text = ""
 
                 if (isExternalStorageWritable() && isExternalStorageReadable()) {
 
