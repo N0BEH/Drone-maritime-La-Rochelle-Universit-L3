@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.projetsmartphone.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -25,7 +24,6 @@ import java.time.format.DateTimeFormatter
 class CustomMapFragment : Fragment(){
 
     private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
     private val mMarkers = arrayListOf<Waypoint>()
     private var mapReady = false
 
@@ -40,9 +38,9 @@ class CustomMapFragment : Fragment(){
             googleMap -> mMap = googleMap
             mapReady = true
 
-            val minime = LatLng(46.1403, -1.1649)
+            val minime = LatLng(46.14547556383779, -1.1685415729880333)
             mMap.moveCamera(CameraUpdateFactory.newLatLng(minime))
-            mMap.animateCamera(CameraUpdateFactory.zoomTo( 13f ))
+            mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
 
             clicMap()
             clicMarker()
@@ -70,7 +68,7 @@ class CustomMapFragment : Fragment(){
                 // Available to read and write
 
                 val fileName = "test.txt"
-                val textToWrite = "${waypoint.longitude},${waypoint.longitude},${waypoint.heure}"
+                val textToWrite = "${it.latitude},${it.longitude},${formatted}"
                 val fileOutputStream: FileOutputStream
                 val fileInputStream: FileInputStream
                 var text = ""
