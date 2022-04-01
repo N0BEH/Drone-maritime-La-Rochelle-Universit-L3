@@ -37,6 +37,12 @@ class NMEAConverter {
                 wp.vitesseKmh = splittedLine[7].toDouble()
             }
 
+            println("reception")
+            print(wp.latitude)
+            print(" - ")
+            println(wp.longitude)
+
+            //println("Le client recoit $txt")
             txt = trame.readLine()
         }
 
