@@ -4,17 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.*
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.util.concurrent.TimeUnit
-
 
 open class MainActivity : AppCompatActivity(), MessageListener {
 
@@ -43,11 +32,10 @@ open class MainActivity : AppCompatActivity(), MessageListener {
         launchClient()
     }
 
+    //Call automatique dès reception de nouvelle trame NMEA.
     override fun onMessage(text: String?) {
 
-        var nmea = NMEAConverter()
-
-        var wp = nmea.trameToWaypoint(text)
+        var wp = NMEAConverter.trameToWaypoint(text)
 
         println(wp.latitude)
         println(wp.longitude)
@@ -59,7 +47,7 @@ open class MainActivity : AppCompatActivity(), MessageListener {
     }
 
     //On lance la connexion au websocket.
-    fun launchClient()
+    override fun launchClient()
     {
         WebSocketManager.init("http://192.168.1.181:9000", this)
         WebSocketManager.connect()
