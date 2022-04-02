@@ -6,7 +6,7 @@
     tools:context=".CustomMapFragment">
 
     <fragment
-        android:id="@+id/mapFragment"
+        android:id="@+id/custom_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:text="Save"
+        android:text="@string/save"
         android:textColor="#ffffff" />
 
 </RelativeLayout>

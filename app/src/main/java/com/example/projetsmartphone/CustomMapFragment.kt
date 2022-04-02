@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -35,11 +34,11 @@ class CustomMapFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_custom_map, container, false)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        val customMapFragmentView = inflater.inflate(R.layout.fragment_custom_map, container, false)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.custom_map) as SupportMapFragment
 
 
-        val bouttonSave = view.findViewById<Button>(R.id.buttonSave) as Button
+        val bouttonSave = customMapFragmentView.findViewById<Button>(R.id.buttonSave)
 
         bouttonSave.setOnClickListener {
             if ( mMarkers.size > 0) {
@@ -56,14 +55,14 @@ class CustomMapFragment : Fragment(){
 
             mapReady = true
 
-            val minime = LatLng(46.14547556383779, -1.1685415729880333)
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(minime))
+            val minime = LatLng(46.14645953235613, -1.1581339314579964)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minime, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
 
             clicMap()
             clicMarker()
         }
-        return view
+        return customMapFragmentView
     }
 
     private fun clicBtnSave(){

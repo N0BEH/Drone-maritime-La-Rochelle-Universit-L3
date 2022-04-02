@@ -7,4 +7,8 @@
     <string name="list_fragment">List Fragment</string>
     <string name="map_fragment">Map Fragment</string>
     <string name="custom_map_fragment">Custom Map Fragment</string>
+    <string name="save">Save</string>
+    <string name="vitesse_noeuds">Vitesse (Noeuds):</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
 </resources>
