@@ -1,13 +1,19 @@
 package com.example.projetsmartphone
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -46,12 +52,38 @@ class MapFragment : Fragment(), MessageListener{
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(maposition, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
+            mMap.setInfoWindowAdapter(object : InfoWindowAdapter {
+                override fun getInfoWindow(arg0: Marker): View? {
+                    return null
+                }
 
+                override fun getInfoContents(marker: Marker): View? {
+                    val info = LinearLayout(mapFragmentView.context)
+                    info.orientation = LinearLayout.VERTICAL
+                    val title = TextView(mapFragmentView.context)
+                    title.setTextColor(Color.BLACK)
+                    title.gravity = Gravity.CENTER
+                    title.setTypeface(null, Typeface.BOLD)
+                    title.text = marker.title
+                    val snippet = TextView(mapFragmentView.context)
+                    snippet.setTextColor(Color.GRAY)
+                    snippet.text = marker.snippet
+                    info.addView(title)
+                    info.addView(snippet)
+                    return info
+                }
+            })
 
             mo
                 .position(maposition)
                 .title("Ma position")
-                .snippet("N: ${vitesseNoeuds}")
+                .snippet(
+                    """
+                    N: ${vitesseNoeuds}
+                    Lat: ${latitude}
+                    Lon: ${longitude}
+                    """.trimIndent()
+                )
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bateau))
 
             mark = mMap.addMarker(mo)
@@ -61,10 +93,18 @@ class MapFragment : Fragment(), MessageListener{
 
                 mo
                     .position(maposition)
-                    .snippet("N: ${vitesseNoeuds}")
+                    .snippet(
+                        """
+                        N: ${vitesseNoeuds}
+                        Lat: ${latitude}
+                        Lon: ${longitude}
+                        """.trimIndent()
+                    )
 
                 mark?.position = mo.position
                 mark?.snippet = mo.snippet
+                mark?.let { CameraUpdateFactory.newLatLng(it.position) }
+                    ?.let { mMap.moveCamera(it) }
             }
 
             h.postDelayed( mRunnable, 1000)
@@ -99,7 +139,7 @@ class MapFragment : Fragment(), MessageListener{
     //On lance la connexion au websocket.
     override fun launchClient()
     {
-        WebSocketManager.init("http://192.168.1.181:9000", this)
+        WebSocketManager.init("http://192.168.0.24:9000", this)
         WebSocketManager.connect()
     }
 
