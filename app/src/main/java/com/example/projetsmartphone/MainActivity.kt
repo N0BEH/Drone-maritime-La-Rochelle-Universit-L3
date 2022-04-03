@@ -23,7 +23,7 @@ open class MainActivity : AppCompatActivity(){
 
         buttomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                //R.id.map -> makeCurrentFragment(mapFragment)
+                R.id.map -> makeCurrentFragment(mapFragment)
                 R.id.list -> makeCurrentFragment(listFragment)
                 R.id.custom_map -> makeCurrentFragment(customMapFragment)
             }

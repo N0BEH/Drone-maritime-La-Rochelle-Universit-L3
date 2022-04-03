@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlin.math.round
 
 
 class MapFragment : Fragment(), MessageListener{
@@ -52,6 +53,7 @@ class MapFragment : Fragment(), MessageListener{
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(maposition, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
+
             mMap.setInfoWindowAdapter(object : InfoWindowAdapter {
                 override fun getInfoWindow(arg0: Marker): View? {
                     return null
@@ -80,8 +82,8 @@ class MapFragment : Fragment(), MessageListener{
                 .snippet(
                     """
                     N: ${vitesseNoeuds}
-                    Lat: ${latitude}
-                    Lon: ${longitude}
+                    Lat: ${round(latitude * 1000) / 1000}
+                    Lon: ${round(longitude * 1000) / 1000}
                     """.trimIndent()
                 )
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bateau))
@@ -96,8 +98,8 @@ class MapFragment : Fragment(), MessageListener{
                     .snippet(
                         """
                         N: ${vitesseNoeuds}
-                        Lat: ${latitude}
-                        Lon: ${longitude}
+                        Lat: ${round(latitude * 1000) / 1000}
+                        Lon: ${round(longitude * 1000) / 1000}
                         """.trimIndent()
                     )
 
