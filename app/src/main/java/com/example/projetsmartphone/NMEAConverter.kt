@@ -20,8 +20,15 @@ class NMEAConverter {
 
                 if(splittedLine[0].equals("GPGGA"))
                 {
-                    wp.latitude = splittedLine[2].toDouble()
-                    wp.longitude = splittedLine[4].toDouble()
+                    var latDizaine: Int = (splittedLine[2].toDouble()/100).toInt()
+                    var latUnites : Double = splittedLine[2].toDouble() - latDizaine*100
+
+                    var longDizaine: Int = (splittedLine[4].toDouble()/100).toInt()
+                    var longUnites : Double = splittedLine[4].toDouble() - longDizaine*100
+
+
+                    wp.latitude = ((latUnites/60)+latDizaine)*100
+                    wp.longitude = ((longUnites/60)+longDizaine)*100
                     wp.heure = splittedLine[1]
                 }
 

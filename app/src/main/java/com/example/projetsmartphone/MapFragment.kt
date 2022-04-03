@@ -126,12 +126,13 @@ class MapFragment : Fragment(), MessageListener{
         longitude = wp.longitude/-100
         maposition = LatLng(latitude, longitude)
 
+
         println(latitude)
-        println(longitude)
+        println(longitude)/*
         println(wp.heure)
         println(vitesseNoeuds)
         println(wp.vitesseKmh)
-        println("\n\n")
+        println("\n\n")*/
         h.postDelayed( mRunnable, 1000)
 
     }
