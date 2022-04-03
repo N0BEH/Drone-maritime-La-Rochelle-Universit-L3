@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-open class MainActivity : AppCompatActivity(), MessageListener {
+
+
+open class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         val mapFragment = MapFragment()
         val listFragment = ListFragment()
@@ -29,30 +29,8 @@ open class MainActivity : AppCompatActivity(), MessageListener {
             }
             true
         }
-        launchClient()
-    }
-
-    //Call automatique dès reception de nouvelle trame NMEA.
-    override fun onMessage(text: String?) {
-
-        var wp = NMEAConverter.trameToWaypoint(text)
-
-        println(wp.latitude)
-        println(wp.longitude)
-        println(wp.heure)
-        println(wp.vitesseNoeud)
-        println(wp.vitesseKmh)
-        println("\n\n")
 
     }
-
-    //On lance la connexion au websocket.
-    override fun launchClient()
-    {
-        WebSocketManager.init("http://192.168.1.181:9000", this)
-        WebSocketManager.connect()
-    }
-
 
     private fun makeCurrentFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
@@ -60,13 +38,6 @@ open class MainActivity : AppCompatActivity(), MessageListener {
             commit()
         }
     }
-
-    internal fun onOpenMap(){
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, CustomMapFragment())
-            .commitNow()
-    }
-
 
 }
 
