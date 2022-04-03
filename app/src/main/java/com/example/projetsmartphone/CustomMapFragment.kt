@@ -28,7 +28,6 @@ class CustomMapFragment : Fragment(){
     private lateinit var mMap: GoogleMap
     private val mMarkers = arrayListOf<Waypoint>()
     private var mapReady = false
-    private var nbrFichier = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,15 +71,31 @@ class CustomMapFragment : Fragment(){
 
         if (state == Environment.MEDIA_MOUNTED) {
 
-            val fileName = "$nbrFichier.txt"
-            var text = ""
-            nbrFichier += 1
+            val fileName = "fichierGPX.gpx"
+            var text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                    "<gpx xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/1\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.topografix.com/GPX/gpx_style/0/2 http://www.topografix.com/GPX/gpx_style/0/2/gpx_style.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\" xmlns:gpx_style=\"http://www.topografix.com/GPX/gpx_style/0/2\" version=\"1.1\" creator=\"https://gpx.studio\">\n" +
+                    "<metadata>\n" +
+                    "    <name>new</name>\n" +
+                    "    <author>\n" +
+                    "        <name>gpx.studio</name>\n" +
+                    "        <link href=\"https://gpx.studio\"></link>\n" +
+                    "    </author>\n" +
+                    "</metadata>\n" +
+                    "<trk>\n" +
+                    "    <name>new</name>\n" +
+                    "    <type>Running</type>\n" +
+                    "    <trkseg>\n"
 
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
 
                 mMarkers.forEach{
-                    text += "${it.latitude},${it.longitude},${it.heure}\n"
+                    text += "    <trkpt lat=\"${it.latitude}\" lon=\"${it.longitude}\">\n" +
+                            "    </trkpt>\n"
                 }
+
+                text += "    </trkseg>\n" +
+                        "</trk>\n" +
+                        "</gpx>\n"
 
                 var fileOutputStream: FileOutputStream
 
@@ -93,16 +108,12 @@ class CustomMapFragment : Fragment(){
 
                     var fileInputStream: FileInputStream = requireActivity().openFileInput(fileName)
 
-                    var myExternalFile = File(fileName).path
-
-
                     fileInputStream.use {
                         text =  it.bufferedReader().use {
                             it.readText()
                         }
 
                         Log.d("TAG", "LOADED: $text")
-                        Log.d("TAG", "dir: $myExternalFile")
                     }
                     fileInputStream.close()
 
@@ -168,7 +179,6 @@ class CustomMapFragment : Fragment(){
         mMap.setOnMarkerClickListener {
             mMap.clear()
             mMarkers.clear()
-
             true
         }
 
