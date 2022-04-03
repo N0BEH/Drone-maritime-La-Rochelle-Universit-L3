@@ -27,9 +27,9 @@ class MapFragment : Fragment(), MessageListener{
     lateinit var mMap: GoogleMap
     var maposition: LatLng = LatLng(46.14645953235613, -1.1581339314579964)
     lateinit var mapFragment: SupportMapFragment
-    var vitesseNoeuds : Double = Double.NaN
-    var latitude : Double = Double.NaN
-    var longitude : Double = Double.NaN
+    var vitesseNoeuds : Double = 0.0
+    var latitude : Double = round(46.14645953235613 * 1000) / 1000
+    var longitude : Double = round(-1.1581339314579964 * 1000) / 1000
     var h : Handler = Handler()
     lateinit var mRunnable: Runnable
 
