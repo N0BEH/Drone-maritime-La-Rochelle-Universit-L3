@@ -1,91 +1,101 @@
 package com.example.projetsmartphone
 
 import android.content.Context
+import android.content.Context.SENSOR_SERVICE
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment() , SensorEventListener {
+
+    private lateinit var sensorManager: SensorManager
+    private lateinit var mMap: GoogleMap
+    private lateinit var mMarkers : Waypoint
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val listFragmentView = inflater.inflate(R.layout.fragment_list, container, false)
-        val listView = listFragmentView.findViewById<ListView>(R.id.liste_itineraire)
-        val nomItineraire = arrayOf(String())
+        val mapFragment = childFragmentManager.findFragmentById(R.id.acceleromterFragment) as SupportMapFragment
+        println("act $activity")
 
+        mapFragment.getMapAsync {
+                googleMap -> mMap = googleMap
+            mMap.clear()
 
-        val state = Environment.getExternalStorageState()
+            val minime = LatLng(46.14645953235613, -1.1581339314579964)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minime, 12f))
+            mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
 
-        if (state == Environment.MEDIA_MOUNTED) {
-            Log.d("TAG", "couocu")
-            if (isExternalStorageReadable()) {
-                Log.d("TAG", "is external")
-                try {
-
-                    var i = 0
-
-                    Log.d("TAG", "${requireActivity().openFileInput("$i.txt").available()}")
-                    while (File("$i.txt").exists()){
-
-                        Log.d("TAG", "dans el while $i")
-
-                        var fileName = "$i.txt"
-
-                        var fileInputStream: FileInputStream = requireActivity().openFileInput(fileName)
-
-                        var text = ""
-
-                        fileInputStream.use {
-                            text =  it.bufferedReader().use {
-                                it.readText()
-                            }
-
-                            Log.d("TAG", "LOADED: $text")
-                        }
-                        fileInputStream.close()
-
-                        nomItineraire[i] = "Mon itinéraire $i"
-
-                        i += 1
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+            setUpSensorStuff()
+            setStartingPoint()
         }
 
 
-
-
-
-        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-            listFragmentView.context, android.R.layout.simple_list_item_1, nomItineraire
-        )
-
-        listView.adapter = arrayAdapter
-
-        listView.setOnItemClickListener { adapterView, view, i, l ->
-            Toast.makeText(listFragmentView.context, nomItineraire[i], Toast.LENGTH_LONG)
-                .show()
-        }
-
-        return listFragmentView
+        return listFragmentView;
     }
 
-    fun isExternalStorageReadable(): Boolean {
-        return Environment.getExternalStorageState() in
-                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
+    private fun setStartingPoint(){
+
+        mMap.setOnMapClickListener { it ->
+
+            mMap.clear()
+            println("lat $it.latitude")
+            println("long $it.longitude")
+            val marker = LatLng(it.latitude, it.longitude)
+            mMap.addMarker(MarkerOptions().position(marker))
+
+            mMarkers = Waypoint(it.latitude, it.longitude)
+
+
+        }
+    }
+
+    private fun setUpSensorStuff() {
+        // Create the sensor manager
+
+        sensorManager = getActivity()?.getSystemService(SENSOR_SERVICE) as SensorManager
+
+        // Specify the sensor you want to listen to
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+            sensorManager.registerListener(
+                this,
+                accelerometer,
+                SensorManager.SENSOR_DELAY_FASTEST,
+                SensorManager.SENSOR_DELAY_FASTEST
+            )
+        }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        // Checks for the sensor we have registered
+        if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+            //Log.d("Main", "onSensorChanged: sides ${event.values[0]} front/back ${event.values[1]} ")
+
+            // Sides = Tilting phone left(10) and right(-10)
+            val sides = event.values[0]
+
+            // Up/Down = Tilting phone up(10), flat (0), upside-down(-10)
+            val upDown = event.values[1]
+
+            println("up $upDown")
+            println("sides $sides")
+
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+        return
     }
 
 }

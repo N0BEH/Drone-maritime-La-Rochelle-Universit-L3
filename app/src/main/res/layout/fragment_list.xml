@@ -6,19 +6,10 @@
     tools:context=".ListFragment">
 
 
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/list_fragment"
-        android:textSize="25sp"
-        android:layout_centerInParent="true"
-        />-->
-
-        <ListView
-            android:id="@+id/liste_itineraire"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
+    <fragment
+        android:id="@+id/acceleromterFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

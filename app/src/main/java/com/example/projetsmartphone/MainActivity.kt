@@ -1,10 +1,12 @@
 package com.example.projetsmartphone
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+import com.google.android.material.internal.ContextUtils.getActivity
 
 
 open class MainActivity : AppCompatActivity(){
