@@ -24,16 +24,14 @@ import kotlin.math.round
 class MapFragment : Fragment(), MessageListener{
 
     lateinit var mMap: GoogleMap
-    var maposition: LatLng = LatLng(46.14645953235613, -1.1581339314579964)
+    var maposition: LatLng = LatLng(Double.NaN, Double.NaN)
+    var mapositionold: LatLng = LatLng(Double.NaN, Double.NaN)
     lateinit var mapFragment: SupportMapFragment
     var vitesseNoeuds : Double = 0.0
     var latitude : Double = round(46.14645953235613 * 1000) / 1000
     var longitude : Double = round(-1.1581339314579964 * 1000) / 1000
-    var oldlat : Double = Double.NaN
-    var oldlon : Double = Double.NaN
     var h : Handler = Handler()
     lateinit var mRunnable: Runnable
-    var init : Boolean = false
 
     var mark: Marker? = null
     var mo: MarkerOptions = MarkerOptions()
@@ -110,21 +108,17 @@ class MapFragment : Fragment(), MessageListener{
                 mark?.let { CameraUpdateFactory.newLatLng(it.position) }
                     ?.let { mMap.moveCamera(it) }
 
-                if (oldlat.isNaN() ||oldlon.isNaN()) {
-                    oldlat = latitude
-                    oldlon = longitude
+
+                if(!(mapositionold.latitude.isNaN() || mapositionold.longitude.isNaN()))
+                {
+                    mMap.addPolyline(
+                        PolylineOptions()
+                            .add(
+                                mapositionold,
+                                maposition
+                            )
+                    )
                 }
-
-                mMap.addPolyline(
-                    PolylineOptions()
-                        .add(
-                            LatLng(oldlat, oldlon),
-                            LatLng(latitude, longitude)
-                        )
-                )
-
-
-
             }
 
             h.postDelayed( mRunnable, 1000)
@@ -139,19 +133,16 @@ class MapFragment : Fragment(), MessageListener{
 
     override fun onMessage(text: String?) {
 
+        //Last position
+        mapositionold = maposition
         val wp = NMEAConverter.trameToWaypoint(text)
+
         vitesseNoeuds = wp.vitesseNoeud
-        latitude = wp.latitude/100
-        longitude = wp.longitude/-100
+        //New position
+        latitude = wp.latitude
+        longitude = wp.longitude
         maposition = LatLng(latitude, longitude)
 
-
-        println(latitude)
-        println(longitude)/*
-        println(wp.heure)
-        println(vitesseNoeuds)
-        println(wp.vitesseKmh)
-        println("\n\n")*/
         h.postDelayed( mRunnable, 1000)
 
     }
@@ -159,7 +150,7 @@ class MapFragment : Fragment(), MessageListener{
     //On lance la connexion au websocket.
     override fun launchClient()
     {
-        WebSocketManager.init("http://192.168.0.24:9000", this)
+        WebSocketManager.init("http://192.168.1.181:9000", this)
         WebSocketManager.connect()
     }
 

@@ -27,8 +27,8 @@ class NMEAConverter {
                     var longUnites : Double = splittedLine[4].toDouble() - longDizaine*100
 
 
-                    wp.latitude = ((latUnites/60)+latDizaine)*100
-                    wp.longitude = ((longUnites/60)+longDizaine)*100
+                    wp.latitude = ((latUnites/60)+latDizaine)
+                    wp.longitude = -((longUnites/60)+longDizaine)
                     wp.heure = splittedLine[1]
                 }
 
