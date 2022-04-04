@@ -4,11 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -49,28 +44,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name=".MapsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName="com.example.projetsmartphone.MainActivity"
-            android:launchMode="singleInstance"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.projetsmartphone.MainActivity"
-
-                />
-
         </activity>
 
 

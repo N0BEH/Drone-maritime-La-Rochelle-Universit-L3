@@ -15,17 +15,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.round
 
 
 class MapFragment : Fragment(), MessageListener{
 
     lateinit var mMap: GoogleMap
-    var maposition: LatLng = LatLng(46.14645953235613, -1.1581339314579964)
+    var maposition: LatLng = LatLng(Double.NaN, Double.NaN)
+    var mapositionold: LatLng = LatLng(Double.NaN, Double.NaN)
     lateinit var mapFragment: SupportMapFragment
     var vitesseNoeuds : Double = 0.0
     var latitude : Double = round(46.14645953235613 * 1000) / 1000
@@ -107,6 +107,18 @@ class MapFragment : Fragment(), MessageListener{
                 mark?.snippet = mo.snippet
                 mark?.let { CameraUpdateFactory.newLatLng(it.position) }
                     ?.let { mMap.moveCamera(it) }
+
+
+                if(!(mapositionold.latitude.isNaN() || mapositionold.longitude.isNaN()))
+                {
+                    mMap.addPolyline(
+                        PolylineOptions()
+                            .add(
+                                mapositionold,
+                                maposition
+                            )
+                    )
+                }
             }
 
             h.postDelayed( mRunnable, 1000)
@@ -115,26 +127,22 @@ class MapFragment : Fragment(), MessageListener{
 
         launchClient()
 
-
-
         return mapFragmentView
     }
 
+
     override fun onMessage(text: String?) {
 
+        //Last position
+        mapositionold = maposition
         val wp = NMEAConverter.trameToWaypoint(text)
+
         vitesseNoeuds = wp.vitesseNoeud
-        latitude = wp.latitude/100
-        longitude = wp.longitude/-100
+        //New position
+        latitude = wp.latitude
+        longitude = wp.longitude
         maposition = LatLng(latitude, longitude)
 
-
-        println(latitude)
-        println(longitude)/*
-        println(wp.heure)
-        println(vitesseNoeuds)
-        println(wp.vitesseKmh)
-        println("\n\n")*/
         h.postDelayed( mRunnable, 1000)
 
     }
