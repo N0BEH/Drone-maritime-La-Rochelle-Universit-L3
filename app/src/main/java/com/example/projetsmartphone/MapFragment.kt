@@ -15,10 +15,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.round
 
 
@@ -30,8 +29,11 @@ class MapFragment : Fragment(), MessageListener{
     var vitesseNoeuds : Double = 0.0
     var latitude : Double = round(46.14645953235613 * 1000) / 1000
     var longitude : Double = round(-1.1581339314579964 * 1000) / 1000
+    var oldlat : Double = Double.NaN
+    var oldlon : Double = Double.NaN
     var h : Handler = Handler()
     lateinit var mRunnable: Runnable
+    var init : Boolean = false
 
     var mark: Marker? = null
     var mo: MarkerOptions = MarkerOptions()
@@ -107,6 +109,22 @@ class MapFragment : Fragment(), MessageListener{
                 mark?.snippet = mo.snippet
                 mark?.let { CameraUpdateFactory.newLatLng(it.position) }
                     ?.let { mMap.moveCamera(it) }
+
+                if (oldlat.isNaN() ||oldlon.isNaN()) {
+                    oldlat = latitude
+                    oldlon = longitude
+                }
+
+                mMap.addPolyline(
+                    PolylineOptions()
+                        .add(
+                            LatLng(oldlat, oldlon),
+                            LatLng(latitude, longitude)
+                        )
+                )
+
+
+
             }
 
             h.postDelayed( mRunnable, 1000)
@@ -115,10 +133,9 @@ class MapFragment : Fragment(), MessageListener{
 
         launchClient()
 
-
-
         return mapFragmentView
     }
+
 
     override fun onMessage(text: String?) {
 
