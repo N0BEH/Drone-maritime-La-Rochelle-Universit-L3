@@ -1,26 +1,26 @@
 package com.example.projetsmartphone
 
-import android.content.Context
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
-import java.util.concurrent.TimeUnit
 
-class ListFragment : Fragment(), SensorEventListener {
+
+class AccelerometerFragment : Fragment(), SensorEventListener {
 
     private lateinit var rotationVector: Sensor
     private lateinit var linearAcceleration: Sensor
@@ -37,10 +37,11 @@ class ListFragment : Fragment(), SensorEventListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
-        val listFragmentView = inflater.inflate(R.layout.fragment_list, container, false)
+        val listFragmentView = inflater.inflate(R.layout.fragment_accelerometer, container, false)
         val mapFragment =
-            childFragmentManager.findFragmentById(R.id.acceleromterFragment) as SupportMapFragment
+            childFragmentManager.findFragmentById(R.id.accelerometerFragment) as SupportMapFragment
         println("act $activity")
 
         mapFragment.getMapAsync { googleMap ->
@@ -68,7 +69,11 @@ class ListFragment : Fragment(), SensorEventListener {
             println("lat $it.latitude")
             println("long $it.longitude")
             val marker = LatLng(it.latitude, it.longitude)
-            mMap.addMarker(MarkerOptions().position(marker))
+            mMap.addMarker(
+                MarkerOptions()
+                        .position(marker)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
+            )
 
             mMarkers = Waypoint(it.latitude, it.longitude)
 

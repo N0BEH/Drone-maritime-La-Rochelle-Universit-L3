@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -41,7 +42,7 @@ class MapFragment : Fragment(), MessageListener{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         // Inflate the layout for this fragment
         val mapFragmentView = inflater.inflate(R.layout.fragment_map, container, false)
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
