@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,6 +33,7 @@ class CustomMapFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         // Inflate the layout for this fragment
         val customMapFragmentView = inflater.inflate(R.layout.fragment_custom_map, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.custom_map) as SupportMapFragment
@@ -96,16 +98,16 @@ class CustomMapFragment : Fragment(){
                         "</trk>\n" +
                         "</gpx>\n"
 
-                var fileOutputStream: FileOutputStream
+                val fileOutputStream: FileOutputStream
 
                 try {
                     fileOutputStream = requireActivity().openFileOutput(fileName, Context.MODE_PRIVATE)
-                    fileOutputStream.write("$text".toByteArray())
+                    fileOutputStream.write(text.toByteArray())
 
                     fileOutputStream.close()
 
 
-                    var fileInputStream: FileInputStream = requireActivity().openFileInput(fileName)
+                    val fileInputStream: FileInputStream = requireActivity().openFileInput(fileName)
 
                     fileInputStream.use {
                         text =  it.bufferedReader().use {

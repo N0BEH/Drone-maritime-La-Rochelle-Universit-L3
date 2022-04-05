@@ -5,9 +5,9 @@
         android:title="@string/carte"
         android:icon="@drawable/ic_baseline_map_24"/>
 
-    <item android:id="@+id/list"
-        android:title="@string/liste_itineraire"
-        android:icon="@drawable/ic_baseline_not_listed_location_24"/>
+    <item android:id="@+id/accelerometer"
+        android:title="@string/accelerometer"
+        android:icon="@drawable/ic_baseline_screen_rotation_24"/>
 
     <item android:id="@+id/custom_map"
         android:title="@string/choix_itineraire"

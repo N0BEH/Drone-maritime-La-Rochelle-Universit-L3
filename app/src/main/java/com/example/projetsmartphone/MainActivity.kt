@@ -1,10 +1,10 @@
 package com.example.projetsmartphone
 
 import android.os.Bundle
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 
 open class MainActivity : AppCompatActivity(){
@@ -13,8 +13,10 @@ open class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         val mapFragment = MapFragment()
-        val listFragment = ListFragment()
+        val accelerometerFragment = AccelerometerFragment()
         val customMapFragment = CustomMapFragment()
 
         makeCurrentFragment(mapFragment)
@@ -24,7 +26,7 @@ open class MainActivity : AppCompatActivity(){
         buttomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.map -> makeCurrentFragment(mapFragment)
-                R.id.list -> makeCurrentFragment(listFragment)
+                R.id.accelerometer -> makeCurrentFragment(accelerometerFragment)
                 R.id.custom_map -> makeCurrentFragment(customMapFragment)
             }
             true
