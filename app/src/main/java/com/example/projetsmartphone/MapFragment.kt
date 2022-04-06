@@ -37,6 +37,8 @@ class MapFragment : Fragment(), MessageListener{
     var mark: Marker? = null
     var mo: MarkerOptions = MarkerOptions()
 
+    var polylines = ArrayList<PolylineOptions>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +93,12 @@ class MapFragment : Fragment(), MessageListener{
 
             mark = mMap.addMarker(mo)
 
+            for(line: PolylineOptions in polylines) {
+                mMap.addPolyline(
+                    line
+                )
+            }
+
 
             mRunnable = Runnable {
 
@@ -112,13 +120,20 @@ class MapFragment : Fragment(), MessageListener{
 
                 if(!(mapositionold.latitude.isNaN() || mapositionold.longitude.isNaN()))
                 {
+
+                    val polylineToAdd = PolylineOptions()
+                        .add(
+                            mapositionold,
+                            maposition
+                        )
+
                     mMap.addPolyline(
-                        PolylineOptions()
-                            .add(
-                                mapositionold,
-                                maposition
-                            )
+                        polylineToAdd
                     )
+
+                    polylines.add(polylineToAdd)
+
+
                 }
             }
 

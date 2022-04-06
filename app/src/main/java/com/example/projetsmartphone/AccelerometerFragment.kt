@@ -15,7 +15,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlin.math.round
 
 
 class AccelerometerFragment : Fragment(), SensorEventListener {
@@ -25,8 +24,15 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
     private lateinit var mMarkers: Waypoint
     private var mMarkersNew: Waypoint = Waypoint()
 
+    var marker : LatLng = LatLng(Double.NaN, Double.NaN)
+
     var mark: Marker? = null
     var mo: MarkerOptions = MarkerOptions()
+
+    var markFlag: Marker? = null
+    var moFlag: MarkerOptions = MarkerOptions()
+
+    var polylines = ArrayList<PolylineOptions>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +49,30 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
         mapFragment.getMapAsync { googleMap ->
             mMap = googleMap
             mMap.clear()
+
+
+
+            if(!marker.latitude.isNaN())
+            {
+                moFlag
+                    .position(marker)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
+
+                markFlag = mMap.addMarker(moFlag)
+            }
+
+            mo
+                .position(LatLng(mMarkersNew.latitude, mMarkersNew.longitude))
+                .title("Ma position")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bateau))
+
+            mark = mMap.addMarker(mo)
+
+            for(line: PolylineOptions in polylines) {
+                mMap.addPolyline(
+                    line
+                )
+            }
 
             setUpSensorStuff()
             setStartingPoint()
@@ -64,12 +94,14 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
             mMap.clear()
             println("lat $it.latitude")
             println("long $it.longitude")
-            val marker = LatLng(it.latitude, it.longitude)
-            mMap.addMarker(
-                MarkerOptions()
-                        .position(marker)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
-            )
+            marker = LatLng(it.latitude, it.longitude)
+
+            moFlag
+                .position(marker)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag))
+
+            markFlag = mMap.addMarker(moFlag)
+
 
             mMarkers = Waypoint(it.latitude, it.longitude)
 
@@ -80,7 +112,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
             mark = mMap.addMarker(mo)
 
-            refreshBoat()
+            //refreshBoat()
 
 
         }
@@ -148,13 +180,17 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
                 mMarkersNew = Waypoint(lat, long)
 
+                val polylineToAdd = PolylineOptions()
+                    .add(
+                        LatLng(mMarkers.latitude, mMarkers.longitude),
+                        LatLng(mMarkersNew.latitude, mMarkersNew.longitude)
+                    )
+
                 mMap.addPolyline(
-                    PolylineOptions()
-                        .add(
-                            LatLng(mMarkers.latitude, mMarkers.longitude),
-                            LatLng(mMarkersNew.latitude, mMarkersNew.longitude)
-                        )
+                    polylineToAdd
                 )
+
+                polylines.add(polylineToAdd)
 
                 mMarkers = Waypoint(mMarkersNew.latitude, mMarkersNew.longitude)
 
