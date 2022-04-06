@@ -38,9 +38,8 @@ class CustomMapFragment : Fragment(){
         val customMapFragmentView = inflater.inflate(R.layout.fragment_custom_map, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.custom_map) as SupportMapFragment
 
-
+        // Bouton "Sauvegarde" pour avoir le fichier GPX
         val bouttonSave = customMapFragmentView.findViewById<Button>(R.id.buttonSave)
-
         bouttonSave.setOnClickListener {
             if ( mMarkers.size > 0) {
                 clicBtnSave()
@@ -66,6 +65,7 @@ class CustomMapFragment : Fragment(){
         return customMapFragmentView
     }
 
+    // Generation du fichier GPX
     private fun clicBtnSave(){
 
         val state = Environment.getExternalStorageState()
@@ -127,7 +127,7 @@ class CustomMapFragment : Fragment(){
 
     }
 
-
+    // Ajouts des marker sur la map
     private fun clicMap(){
 
         mMap.setOnMapClickListener { it ->
@@ -175,6 +175,7 @@ class CustomMapFragment : Fragment(){
         }
     }
 
+    // Permet de supprimer l'ensemble des marker
     private fun clicMarker(){
 
         mMap.setOnMarkerClickListener {
@@ -184,11 +185,12 @@ class CustomMapFragment : Fragment(){
         }
 
     }
-
+    // Ecriture fichier dans le stockage du smartphone
     fun isExternalStorageWritable(): Boolean {
         return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
     }
 
+    // Lecture fichier dans le stockage du smartphone
     fun isExternalStorageReadable(): Boolean {
         return Environment.getExternalStorageState() in
                 setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)

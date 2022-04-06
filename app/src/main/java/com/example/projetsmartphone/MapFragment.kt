@@ -49,7 +49,7 @@ class MapFragment : Fragment(), MessageListener{
         val mapFragmentView = inflater.inflate(R.layout.fragment_map, container, false)
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
-
+        // Permet de générer la map (Google Maps)
         mapFragment.getMapAsync {
                 googleMap -> mMap = googleMap
             mMap.clear()
@@ -57,6 +57,7 @@ class MapFragment : Fragment(), MessageListener{
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(maposition, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo( 12f ))
 
+            // Permet d'avoir les informations sur le marker
             mMap.setInfoWindowAdapter(object : InfoWindowAdapter {
                 override fun getInfoWindow(arg0: Marker): View? {
                     return null
@@ -99,7 +100,7 @@ class MapFragment : Fragment(), MessageListener{
                 )
             }
 
-
+            // Permet de relancer la réactualisation du bateau sur la map
             mRunnable = Runnable {
 
                 mo
@@ -120,7 +121,7 @@ class MapFragment : Fragment(), MessageListener{
 
                 if(!(mapositionold.latitude.isNaN() || mapositionold.longitude.isNaN()))
                 {
-
+                    // Permet de générer le tracage du bateau
                     val polylineToAdd = PolylineOptions()
                         .add(
                             mapositionold,
@@ -140,13 +141,13 @@ class MapFragment : Fragment(), MessageListener{
             h.postDelayed( mRunnable, 1000)
 
         }
-
+        // Lien avec le simulateur
         launchClient()
 
         return mapFragmentView
     }
 
-
+    // Update des données (vitesse, position)
     override fun onMessage(text: String?) {
 
         //Last position
@@ -158,6 +159,9 @@ class MapFragment : Fragment(), MessageListener{
         latitude = wp.latitude
         longitude = wp.longitude
         maposition = LatLng(latitude, longitude)
+        print(maposition)
+        print(latitude)
+        print(longitude)
 
         h.postDelayed( mRunnable, 1000)
 
@@ -166,7 +170,7 @@ class MapFragment : Fragment(), MessageListener{
     //On lance la connexion au websocket.
     override fun launchClient()
     {
-        WebSocketManager.init("http://192.168.1.181:9000", this)
+        WebSocketManager.init("http://192.168.0.24:9000", this)
         WebSocketManager.connect()
     }
 

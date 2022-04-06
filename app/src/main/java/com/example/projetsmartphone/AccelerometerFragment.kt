@@ -25,13 +25,10 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
     private var mMarkersNew: Waypoint = Waypoint()
 
     var marker : LatLng = LatLng(Double.NaN, Double.NaN)
-
     var mark: Marker? = null
     var mo: MarkerOptions = MarkerOptions()
-
     var markFlag: Marker? = null
     var moFlag: MarkerOptions = MarkerOptions()
-
     var polylines = ArrayList<PolylineOptions>()
 
     override fun onCreateView(
@@ -39,19 +36,22 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Permet de cacher le titre en haut
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
 
-        val listFragmentView = inflater.inflate(R.layout.fragment_accelerometer, container, false)
+        // Permet d'identifier le Fragment correspondant (ici accelerometer)
+        val accelerometerFragmentView = inflater.inflate(R.layout.fragment_accelerometer, container, false)
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.accelerometerFragment) as SupportMapFragment
         println("act $activity")
 
+        // Permet de générer la map (Google Maps)
         mapFragment.getMapAsync { googleMap ->
             mMap = googleMap
             mMap.clear()
 
 
-
+            // Permet d'initialiser le marker "flag"
             if(!marker.latitude.isNaN())
             {
                 moFlag
@@ -61,6 +61,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
                 markFlag = mMap.addMarker(moFlag)
             }
 
+            // Initialise le marker à la bonne position (avec un icone bateau)
             mo
                 .position(LatLng(mMarkersNew.latitude, mMarkersNew.longitude))
                 .title("Ma position")
@@ -68,25 +69,28 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
             mark = mMap.addMarker(mo)
 
+            // Permet de générer le tracage du bateau
             for(line: PolylineOptions in polylines) {
                 mMap.addPolyline(
                     line
                 )
             }
 
+            // Gestion de l'accelerometer
             setUpSensorStuff()
             setStartingPoint()
 
+            // Zone par défaut (FAC de La Rochelle)
             val minime = LatLng(46.14645953235613, -1.1581339314579964)
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minime, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12f))
 
         }
 
-
-        return listFragmentView;
+        return accelerometerFragmentView;
     }
 
+    // Permet de créer le marker de départ (au choix)
     private fun setStartingPoint() {
 
         mMap.setOnMapClickListener { it ->
@@ -118,6 +122,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
         }
     }
 
+    // Permet d'identifier l'accelerometer du smartphone
     private fun setUpSensorStuff() {
         // Create the sensor manager
 
@@ -137,6 +142,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
     }
 
+    // Permet d'actualiser la position du bateau
     private fun refreshBoat() {
 
         mo
@@ -149,6 +155,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
     }
 
+    // Lorsque l'on utilise le capteur "accelerometre" du smarthone, cette méthode le détecte
     override fun onSensorChanged(event: SensorEvent?) {
         // Checks for the sensor we have registered
 
@@ -162,8 +169,8 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
                 // Up/Down = Tilting phone up(10), flat (0), upside-down(-10)
                 val x = event.values[0]
 
-                println("x = $x")
-                println("y = $y")
+                //println("x = $x")
+                //println("y = $y")
                 var long = mMarkers.longitude
                 var lat = mMarkers.latitude
                 if (x < -0.1) {
@@ -200,7 +207,7 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
     }
 
-
+    // Methode override de Sensor, pas utilisé pour notre cas
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         return
     }

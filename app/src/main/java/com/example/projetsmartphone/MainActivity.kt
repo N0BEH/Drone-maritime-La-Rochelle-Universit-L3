@@ -14,15 +14,15 @@ open class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
 
-
+        // Fragments Manager
         val mapFragment = MapFragment()
         val accelerometerFragment = AccelerometerFragment()
         val customMapFragment = CustomMapFragment()
-
+        // Default Fragment
         makeCurrentFragment(mapFragment)
 
+        // Gestion du menu (navigation bottom bar)
         val buttomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
         buttomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.map -> makeCurrentFragment(mapFragment)
@@ -34,6 +34,7 @@ open class MainActivity : AppCompatActivity(){
 
     }
 
+    // Switch entre les différents Fragments
     private fun makeCurrentFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, fragment)
