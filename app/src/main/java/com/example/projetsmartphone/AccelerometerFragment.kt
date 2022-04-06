@@ -180,9 +180,9 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
                 }
 
                 if (y < -0.1) {
-                    long += (y/5000)*2
+                    long += y/1000
                 } else if (y > 0.1) {
-                    long += (y/5000)*2
+                    long += y/1000
                 }
 
                 mMarkersNew = Waypoint(lat, long)
