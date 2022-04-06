@@ -16,7 +16,7 @@ Pour cela, 3 grandes fonctionnalités :
   - sauvegarde de la trajectoire sous la forme d'un fichier permettant de rejouer la trajectoire (sous xcode)
 
 ## Equipes
-Ce projet est constitué de 4(5 bientôt) personnes, et réparti en différents rôles :
+Ce projet est constitué de 4 personnes, et réparti en différents rôles :
 
 [CHEF DE PROJET] - Valentin R.
 - Chargé de mener le projet et gérer son bon déroulement
@@ -33,7 +33,7 @@ Ce projet est constitué de 4(5 bientôt) personnes, et réparti en différents 
 - Oriente les fondations et les premières étapes du développement
 - Fait le pont entre l'équipe de développement et la partie organisation
 
-[DEV] - Evan P. & (notre 5ème bientôt)
+[DEV] - Evan P
 - Réalise les différentes fonctionnalités attribuées
 - Utilisation des bonnes pratiques en matière de code
 
