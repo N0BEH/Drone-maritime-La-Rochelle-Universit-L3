@@ -151,7 +151,7 @@ class MapFragment : Fragment(), MessageListener{
     //On lance la connexion au websocket.
     override fun launchClient()
     {
-        WebSocketManager.init("http://192.168.0.24:9000", this)
+        WebSocketManager.init("http://192.168.1.181:9000", this)
         WebSocketManager.connect()
     }
 

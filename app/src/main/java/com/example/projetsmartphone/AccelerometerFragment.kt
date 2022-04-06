@@ -14,23 +14,19 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
+import kotlin.math.round
 
 
 class AccelerometerFragment : Fragment(), SensorEventListener {
 
-    private lateinit var rotationVector: Sensor
-    private lateinit var linearAcceleration: Sensor
-    private lateinit var gyroscope: Sensor
-    private lateinit var gravity: Sensor
-    private lateinit var accelerometer: Sensor
     private lateinit var sensorManager: SensorManager
     private lateinit var mMap: GoogleMap
     private lateinit var mMarkers: Waypoint
-    private lateinit var mMarkersNew: Waypoint
+    private var mMarkersNew: Waypoint = Waypoint()
+
+    var mark: Marker? = null
+    var mo: MarkerOptions = MarkerOptions()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,13 +44,13 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
             mMap = googleMap
             mMap.clear()
 
+            setUpSensorStuff()
+            setStartingPoint()
+
             val minime = LatLng(46.14645953235613, -1.1581339314579964)
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minime, 12f))
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12f))
 
-
-            setUpSensorStuff()
-            setStartingPoint()
         }
 
 
@@ -77,6 +73,15 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
 
             mMarkers = Waypoint(it.latitude, it.longitude)
 
+            mo
+                .position(LatLng(mMarkersNew.latitude, mMarkersNew.longitude))
+                .title("Ma position")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bateau))
+
+            mark = mMap.addMarker(mo)
+
+            refreshBoat()
+
 
         }
     }
@@ -97,6 +102,18 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
             )
         }
 
+
+    }
+
+    private fun refreshBoat() {
+
+        mo
+            .position(LatLng(mMarkersNew.latitude, mMarkersNew.longitude))
+
+        mark?.position = mo.position
+        mark?.snippet = mo.snippet
+        mark?.let { CameraUpdateFactory.newLatLng(it.position) }
+            ?.let { mMap.moveCamera(it) }
 
     }
 
@@ -140,6 +157,8 @@ class AccelerometerFragment : Fragment(), SensorEventListener {
                 )
 
                 mMarkers = Waypoint(mMarkersNew.latitude, mMarkersNew.longitude)
+
+                refreshBoat()
             }
         }
 
