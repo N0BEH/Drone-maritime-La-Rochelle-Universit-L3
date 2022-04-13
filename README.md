@@ -1,6 +1,6 @@
 # ProjetSmartphone
 
-Bon courage aux l3.
+Bon courage aux L3.
 
 Dépôt pour le projet de Développement sur smartphone et objets connectés (cadre Universitaire - Licence 3ème année Informatique).
 
